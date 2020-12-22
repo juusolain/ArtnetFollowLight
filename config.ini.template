@@ -1,0 +1,11 @@
+[display]
+stage_min_x = -20
+stage_max_x = 20
+stage_min_y = -10
+stage_max_y = 20
+
+framerate = 60
+scale = 20
+
+[control]
+speed = 10
