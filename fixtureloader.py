@@ -23,7 +23,7 @@ async def load():
             fixtureconfig['universe'] = int(config['DMX']['universe'])
             fixtureconfig['node_ip'] = config['DMX']['node_ip']
 
-            fixtureconfig['prefer_pan'] = config['misc'].getboolean('prefer_pan')
+            fixtureconfig['prefer_tilt'] = config['misc'].getboolean('prefer_tilt')
             fixtureconfig['default_fade_time'] = int(config['misc']['default_fade_time'])
             fixtureconfig['invert_tilt'] = config['misc'].getboolean('invert_tilt')
             fixtureconfig['invert_pan'] = config['misc'].getboolean('invert_pan')

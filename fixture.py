@@ -18,7 +18,7 @@ class Fixture:
     z = 0
     start_channel = 1
     default_fade_time = 50 
-    prefer_pan = False
+    prefer_tilt = False
 
     # Props
     current_pan = 0
@@ -42,7 +42,7 @@ class Fixture:
         tilt = calc.get_tilt(deltas.x, deltas.y, deltas.z)
 
         # Faster movement below lamp if not disabled
-        if not self.prefer_pan:
+        if self.prefer_tilt:
             if pan > 90:
                 pan -= 180
                 tilt = - tilt
