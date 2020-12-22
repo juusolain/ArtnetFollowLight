@@ -65,14 +65,15 @@ class Fixture:
         self.set_position_raw(pan, tilt, fade_time)
 
     def set_position_raw(self, pan: float, tilt: float, fade_time: int) -> None:
+        tilt = - tilt
         pan_int = calc.convert_to_int(pan, min_deg=self.pan_min_degrees, max_deg=self.pan_max_degrees, width=self.pan_width)
         tilt_int = calc.convert_to_int(tilt, min_deg=self.tilt_min_degrees, max_deg=self.tilt_max_degrees, width=self.tilt_width)
 
         pan_arr = calc.int_to_array(pan_int, self.pan_width)
         tilt_arr = calc.int_to_array(tilt_int, self.tilt_width)
 
-        self.pan_channel.add_fade(pan_arr, 0)
-        self.tilt_channel.add_fade(tilt_arr, 0)
+        self.pan_channel.add_fade(pan_arr, fade_time)
+        self.tilt_channel.add_fade(tilt_arr, fade_time)
 
 
 
