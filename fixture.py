@@ -50,6 +50,12 @@ class Fixture:
                 pan += 180
                 tilt = - tilt
 
+        if self.invert_tilt:
+            tilt = - tilt
+
+        if self.invert_pan:
+            pan = - pan
+
         self.current_pan = pan
         self.current_tilt = tilt
 

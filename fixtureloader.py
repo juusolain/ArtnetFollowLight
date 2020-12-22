@@ -25,6 +25,8 @@ async def load():
 
             fixtureconfig['prefer_pan'] = config['misc'].getboolean('prefer_tilt')
             fixtureconfig['default_fade_time'] = int(config['misc']['default_fade_time'])
+            fixtureconfig['invert_tilt'] = config['misc'].getboolean('invert_tilt')
+            fixtureconfig['invert_pan'] = config['misc'].getboolean('invert_pan')
                 
 
             node_ip = fixtureconfig['node_ip']
