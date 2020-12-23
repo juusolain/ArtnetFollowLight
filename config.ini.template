@@ -7,5 +7,7 @@ stage_max_y = 20
 framerate = 60
 scale = 20
 
+show_pan_tilt = yes
+
 [control]
 speed = 10

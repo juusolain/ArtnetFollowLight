@@ -41,7 +41,7 @@ class Fixture:
         pan = calc.get_pan(deltas.x, deltas.y)
         tilt = calc.get_tilt(deltas.x, deltas.y, deltas.z)
 
-        # Faster movement below lamp if not disabled
+        # Use full tilt range
         if self.prefer_tilt:
             if pan > 90:
                 pan -= 180
@@ -50,14 +50,12 @@ class Fixture:
                 pan += 180
                 tilt = - tilt
 
+        # Pan & tilt inverts
         if self.invert_tilt:
             tilt = - tilt
 
         if self.invert_pan:
             pan = - pan
-
-        self.current_pan = pan
-        self.current_tilt = tilt
 
         pan += self.pan_offset
         tilt += self.tilt_offset
@@ -65,7 +63,9 @@ class Fixture:
         self.set_position_raw(pan, tilt, fade_time)
 
     def set_position_raw(self, pan: float, tilt: float, fade_time: int) -> None:
-        tilt = - tilt
+        self.current_pan = pan
+        self.current_tilt = tilt
+
         pan_int = calc.convert_to_int(pan, min_deg=self.pan_min_degrees, max_deg=self.pan_max_degrees, width=self.pan_width)
         tilt_int = calc.convert_to_int(tilt, min_deg=self.tilt_min_degrees, max_deg=self.tilt_max_degrees, width=self.tilt_width)
 
