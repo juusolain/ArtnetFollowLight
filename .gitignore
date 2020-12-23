@@ -2,3 +2,4 @@ venv
 active
 __pycache__
 config.ini
+.vscode
