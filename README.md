@@ -8,6 +8,9 @@
 - [x] Universe and node setup
 - [x] Control with joystick
 
+# Node setup:
+If you are using another console to output other values, you should change the merge mode on the console to LTP. Otherwise the outputted pan & tilt values could be overridden by the other console.
+
 # Config
 
 ## User settings
