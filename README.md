@@ -25,8 +25,12 @@ Config should be placed in the config.ini file.
     framerate = 60
     scale = 20
 
+    show_pan_tilt = yes
+
     [control]
     speed = 10
+    deadzone = 0.01
+    button_pause = 1
 
 ## Fixture config
 Copy a template ini from templates/ or create your own ini in active. The following values should always be configured individually for each fixture:
@@ -38,47 +42,61 @@ Copy a template ini from templates/ or create your own ini in active. The follow
     universe
     node_ip
     
+The values in the examples below are for the GLP impression S350.
+
 ### DMX address, universe and node
 Set the starting address of the fixture, the universe in which the fixture and the IP address of the node
 
-    start_channel=1
-    universe=1
-    node_ip=10.0.0.1
+    [DMX]
+    start_channel = 1
+    universe = 1
+    node_ip = 10.0.0.1
 
 ### Misc
 Set default fade time for this fixture and whether to prefer tilt or pan.
-Prefer pan is used to set, whether the pan or tilt range should be preferred when rotating. When yes, the tilt range starts from zero, and when no, the pan range is limited to -90 degrees ->90 degrees
+Prefer tilt is used to set whether the pan or tilt range should be preferred when rotating. Depending on the fixture location pan or tilt should be chosen to be preferred.
 
+    [misc]
     default_fade_time = 50
-    prefer_pan = yes
+    prefer_tilt = no
 
 ### Location
 The x, y and z coordinates of the fixture need to be configured.
 Use the variables x, y and z
 
-    x=10
-    y=0
-    z=5
+    [location]
+    x = 10
+    y = 0
+    z = 5
 
-### Position offsets
-You should choose an origin point and the orientation of the coordinates. It is recommended that you point the X-axis along the stage and the Z-axis up.
+### Pan and tilt offsets
+You might need to modify these depending on how the fixture is orientated.
 
-In the default position, the position model's forward vector is (0,0,-1) and the up vector is (0,1,0). More simply, the model points down (Z-), and the top of the fixture points forward (Y+). The fixture needs to be offsetted to this position if it doesn't do it by default.
+    [position]
+    tilt_offset = 0
+    pan_offset = 0
 
-    tilt_offset=0
-    pan_offset=0
+### Pan and tilt inverts
+These might also be need to be modified based on the orientation of the fixture.
+
+    [misc]
+    tilt_invert = yes
+    pan_invert = no
+
+### Pan and tilt limits:
+
+    [position]
+    pan_min_degrees = -282.5
+    pan_max_degrees = 282.5
+    tilt_min_degrees = -180
+    tilt_max_degrees = 180
 
 ### DMX channel configuration
 You can look up these in the manual of your fixture.
-
-Example (GLP S350 in 35 DMX mode):
-
-    pan_start = 1
+    
+    [channels]
+    pan_start = 0
     pan_width = 2
-    pan_min_degrees = -282.5
-    pan_max_degrees = 282.5
-    tilt_start = 3
+    tilt_start = 2
     tilt_width = 2
-    pan_min_degrees = -180
-    pan_max_degrees = 180
 
