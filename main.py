@@ -24,7 +24,11 @@ stage_height = stage_max_y - stage_min_y
 framerate = config['display'].getint('framerate')
 
 # Joystick sensitivity
-speed = config['control'].getfloat('speed')
+joystick_speed = config['control'].getfloat('speed')
+joystick_deadzone = config['control'].getfloat('deadzone')
+
+# Joystick buttons
+joystick_button_pause = config['control'].getint('button_pause')
 
 # Display scale & size
 scale = config['display'].getint('scale')
@@ -40,8 +44,9 @@ screen = pygame.display.set_mode(size)
 
 # Init texts
 font = pygame.font.SysFont('Calibri', 20)
-pause_text = font.render('Output paused', False, (200, 200, 200))
+pause_text = font.render('Output paused', True, (200, 200, 200))
 
+# Main running bool
 running = True
 
 # Translate "world" coordinates to pygame
@@ -59,10 +64,10 @@ def coordinate_translate(x: float, y: float) -> (int, int):
 # Renders text to surface
 def render_text(text: str) -> pygame.Surface:
     global font
-    return font.render(text, False, (200, 200, 200))
+    return font.render(text, True, (200, 200, 200))
 
 
-def update():
+def update() -> None:
     screen.fill((10,10,10)) # Background
     tx, ty = coordinate_translate(lights.current_target['x'], lights.current_target['y']) # Target coords
     aa_circle(screen, tx, ty, 2*scale, (255,150,150)) # Target circle
@@ -73,35 +78,53 @@ def update():
 
     # Pause text
     if lights.paused:
-        screen.blit(pause_text,(20,20))
+        screen.blit(pause_text, (20, size[1]-40))
 
     # Pan tilt text
-    if show_pan_tilt:
-        t_pan = render_text(str(lights.fixtures[0].current_pan))
-        t_tilt = render_text(str(lights.fixtures[0].current_tilt))
-        screen.blit(t_pan,(20,50))
-        screen.blit(t_tilt,(20,80))
+    if show_pan_tilt and len(lights.fixtures) > 0:
+        t_debug_title = render_text("F[0]: Pan & tilt:")
+        t_pan = render_text(str(round(lights.fixtures[0].current_pan, 2)))
+        t_tilt = render_text(str(round(lights.fixtures[0].current_tilt, 2)))
+        screen.blit(t_debug_title,(20,20))
+        screen.blit(t_pan,(20,40))
+        screen.blit(t_tilt,(20,60))
 
     pygame.display.flip()
 
-def aa_circle(surf, x, y, radius, color):
-    gfxdraw.aacircle(surf, x, y, radius, color)
+# Antialiased circle
+def aa_circle(surf: pygame.surface, x: int, y: int, radius: int, color: (int, int, int)) -> None:
     gfxdraw.filled_circle(surf, x, y, radius, color)
+    gfxdraw.aacircle(surf, x, y, radius, color)
 
-def update_position():
+# Update target from joystick
+def update_position() -> None:
     global joystick
-    mult = speed/framerate
+    mult = joystick_speed / framerate
     x_value = joystick.get_axis(0)
     y_value = 0 - joystick.get_axis(1)
+
+    if abs(x_value) < joystick_deadzone or abs(y_value) < joystick_deadzone:
+        return
 
     lights.current_target['x'] += x_value * mult
     lights.current_target['y'] += y_value * mult
 
-def start_lights_thread():
+# Start light thread
+def start_lights_thread() -> None:
     asyncio.run(lights.main())
 
-def select_joystick():
+# Select joystick if multiple
+def select_joystick() -> pygame.joystick.Joystick:
     joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+
+    # If only one connected, select it
+    if len(joysticks) == 1:
+        return joysticks[0]
+    
+    # If no joysticks...
+    if len(joysticks) == 0:
+        print('No joysticks connected...')
+        return None
 
     joysticknames = [x.get_name() for x in joysticks]
 
@@ -113,21 +136,35 @@ def select_joystick():
 
     return joysticks[i]
 
+# Start light thread
 lights_thread = threading.Thread(target=start_lights_thread, daemon=True)
 lights_thread.start()
 
+# Select joystick
 joystick = select_joystick()
 
+# Main loop
 while running:
+    # Update screen & target
     update()
     update_position()
+
+    # Events
     ev = pygame.event.get()
     for event in ev:
+        # Quit from pygame
         if event.type == pygame.QUIT:
             running = False
+        # Keyboard
         if event.type == pygame.KEYDOWN:
+            # Pause
             if event.key == pygame.K_SPACE:
                 lights.paused = not lights.paused
+        # Joystick buttons
         if event.type == pygame.JOYBUTTONDOWN:
-            lights.paused = not lights.paused
+            # Pause
+            if event.button == joystick_button_pause:
+                lights.paused = not lights.paused
+
+    # Clock tick
     clock.tick(framerate)

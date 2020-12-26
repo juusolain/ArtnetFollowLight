@@ -11,14 +11,16 @@ current_target = {
     'z': 0
 }
 
+# Load fixtures
 async def load():
     global fixtures
-    fixtures, nodes = await fixtureloader.load()
+    fixtures, nodes = await fixtureloader.load() # Call fixtureloader to load
 
 def set_positions():
     global current_target
+    # set target for each of the fixtures
     for f in fixtures:
-        f.set_target(current_target['x'], current_target['y'], current_target['z'])
+        f.set_target(current_target)
 
 async def main():
     global fixtures
