@@ -3,10 +3,8 @@
 * Fully automatic follow spot using existing or cheap equipment
 
 ## Current TODO:
-- [x] Fixture class basic implementation
-- [x] Fixture config loading from files
-- [x] Universe and node setup
-- [x] Control with joystick
+- [ ] Make fixture loading better
+- [ ] Configuration UI
 
 # Node setup:
 If you are using another console to output other values, you should change the merge mode on the console to LTP. Otherwise the outputted pan & tilt values could be overridden by the other console.
