@@ -82,12 +82,12 @@ class Fixture:
         self.current_tilt = tilt
 
         # Convert to DMX uint
-        pan_int = calc.convert_to_int(pan, min_deg=self.pan_min_degrees, max_deg=self.pan_max_degrees, width=self.pan_width)
-        tilt_int = calc.convert_to_int(tilt, min_deg=self.tilt_min_degrees, max_deg=self.tilt_max_degrees, width=self.tilt_width)
+        pan_uint = calc.convert_to_uint(pan, min_deg=self.pan_min_degrees, max_deg=self.pan_max_degrees, width=self.pan_width)
+        tilt_uint = calc.convert_to_uint(tilt, min_deg=self.tilt_min_degrees, max_deg=self.tilt_max_degrees, width=self.tilt_width)
 
         # Convert to uint8 array for multiple DMX channels
-        pan_arr = calc.int_to_array(pan_int, self.pan_width)
-        tilt_arr = calc.int_to_array(tilt_int, self.tilt_width)
+        pan_arr = calc.uint_to_array(pan_uint, self.pan_width)
+        tilt_arr = calc.uint_to_array(tilt_uint, self.tilt_width)
 
         # Send pan & tilt to channels
         self.pan_channel.add_fade(pan_arr, fade_time)

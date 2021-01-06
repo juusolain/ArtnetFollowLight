@@ -23,13 +23,13 @@ def set_positions():
         f.set_target(current_target)
 
 async def main():
-    global fixtures
-    await load()
+    await load() # Load fixtures
     while True:
         if not paused:
             set_positions()
-        await asyncio.sleep(0.05) # update position 20 times in a second
+        await asyncio.sleep(1/30) # update position 30 times in a second
 
+# Set target
 async def set_target(new_target):
     global current_target
     current_target = new_target
