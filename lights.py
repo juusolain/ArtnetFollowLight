@@ -1,9 +1,8 @@
 import fixtureloader
 import asyncio
+import listener
 
 fixtures = []
-
-paused = False
 
 current_target = {
     'x': 0,
@@ -25,7 +24,7 @@ def set_positions():
 async def main():
     await load() # Load fixtures
     while True:
-        if not paused:
+        if not listener.paused:
             set_positions()
         await asyncio.sleep(1/44) # update position 30 times in a second
 

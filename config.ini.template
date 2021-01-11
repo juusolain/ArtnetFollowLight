@@ -12,6 +12,6 @@ show_pan_tilt = yes
 [control]
 speed = 10
 deadzone = 0.01
-button_pause = 1
 button_next = 4
 button_prev = 3
+random_debug_input = no

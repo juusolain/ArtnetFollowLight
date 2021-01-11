@@ -7,6 +7,10 @@ import threading
 import pygame
 from pygame import gfxdraw
 import questionary
+import listener
+import random
+import listener
+
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -26,9 +30,9 @@ framerate = config['display'].getint('framerate')
 # Joystick sensitivity
 joystick_speed = config['control'].getfloat('speed')
 joystick_deadzone = config['control'].getfloat('deadzone')
+random_debug_input = config['control'].getboolean('random_debug_input')
 
 # Joystick buttons
-joystick_button_pause = config['control'].getint('button_pause')
 joystick_button_next = config['control'].getint('button_next')
 joystick_button_prev = config['control'].getint('button_prev')
 
@@ -80,7 +84,7 @@ def update() -> None:
         aa_circle(screen, x, y, scale, (150,255,150)) # Fixture circle
 
     # Pause text
-    if lights.paused:
+    if listener.paused:
         screen.blit(pause_text, (20, size[1]-40))
 
     # Pan tilt text
@@ -102,14 +106,21 @@ def aa_circle(surf: pygame.surface, x: int, y: int, radius: int, color: (int, in
 # Update target from joystick
 def update_position() -> None:
     global joystick
-    if joystick is None:
-        return
+    if joystick is None: # If no joystick, random inputs for debugs
+        if random_debug_input:
+            x_value = random.uniform(-0.5, 0.5)
+            y_value = random.uniform(-0.5, 0.5)
+        else:
+            return
+    else:
+        x_value = joystick.get_axis(0)
+        y_value = 0 - joystick.get_axis(1)
     mult = joystick_speed / framerate
-    x_value = joystick.get_axis(0)
-    y_value = 0 - joystick.get_axis(1)
+    
 
     if abs(x_value) < joystick_deadzone or abs(y_value) < joystick_deadzone:
         return
+        
 
     lights.current_target['x'] += x_value * mult
     lights.current_target['y'] += y_value * mult
@@ -117,6 +128,9 @@ def update_position() -> None:
 # Start light thread
 def start_lights_thread() -> None:
     asyncio.run(lights.main())
+
+def start_listener_thread() -> None:
+    listener.main()
 
 # Select joystick if multiple
 def select_joystick() -> pygame.joystick.Joystick:
@@ -145,6 +159,10 @@ def select_joystick() -> pygame.joystick.Joystick:
 lights_thread = threading.Thread(target=start_lights_thread, daemon=True)
 lights_thread.start()
 
+# Start listener thread
+listener_thread = threading.Thread(target=start_listener_thread, daemon=True)
+listener_thread.start()
+
 # Select joystick
 joystick = select_joystick()
 
@@ -168,8 +186,6 @@ while running:
         # Joystick buttons
         if event.type == pygame.JOYBUTTONDOWN:
             # Pause
-            if event.button == joystick_button_pause:
-                lights.paused = not lights.paused
             if event.button == joystick_button_next:
                 selected_fixture_index += 1
                 if selected_fixture_index > len(lights.fixtures) - 1:
