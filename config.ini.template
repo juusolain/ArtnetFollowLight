@@ -15,3 +15,7 @@ deadzone = 0.01
 button_next = 4
 button_prev = 3
 random_debug_input = no
+
+[listener]
+addr = 127.0.0.1
+universe = 100
