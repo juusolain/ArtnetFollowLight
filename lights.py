@@ -6,8 +6,8 @@ fixtures = []
 paused = False
 
 current_target = {
-    'x': -4,
-    'y': 5,
+    'x': 0,
+    'y': 4,
     'z': 0
 }
 

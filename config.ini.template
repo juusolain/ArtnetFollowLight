@@ -13,3 +13,5 @@ show_pan_tilt = yes
 speed = 10
 deadzone = 0.01
 button_pause = 1
+button_next = 4
+button_prev = 3

@@ -29,6 +29,8 @@ joystick_deadzone = config['control'].getfloat('deadzone')
 
 # Joystick buttons
 joystick_button_pause = config['control'].getint('button_pause')
+joystick_button_next = config['control'].getint('button_next')
+joystick_button_prev = config['control'].getint('button_prev')
 
 # Display scale & size
 scale = config['display'].getint('scale')
@@ -36,6 +38,7 @@ size = width, height = int(stage_width*scale), int(stage_height*scale)
 
 # show pan/tilt values on screen
 show_pan_tilt = config['display'].getboolean('show_pan_tilt') 
+selected_fixture_index = 0
 
 # Init pygame
 pygame.init()
@@ -82,9 +85,9 @@ def update() -> None:
 
     # Pan tilt text
     if show_pan_tilt and len(lights.fixtures) > 0:
-        t_debug_title = render_text("F[0]: Pan & tilt:")
-        t_pan = render_text(str(round(lights.fixtures[0].current_pan, 2)))
-        t_tilt = render_text(str(round(lights.fixtures[0].current_tilt, 2)))
+        t_debug_title = render_text(f'F[{selected_fixture_index}]: Pan & tilt:')
+        t_pan = render_text(str(round(lights.fixtures[selected_fixture_index].current_pan, 2)))
+        t_tilt = render_text(str(round(lights.fixtures[selected_fixture_index].current_tilt, 2)))
         screen.blit(t_debug_title,(20,20))
         screen.blit(t_pan,(20,40))
         screen.blit(t_tilt,(20,60))
@@ -165,6 +168,14 @@ while running:
             # Pause
             if event.button == joystick_button_pause:
                 lights.paused = not lights.paused
+            if event.button == joystick_button_next:
+                selected_fixture_index += 1
+                if selected_fixture_index > len(lights.fixtures) - 1:
+                    selected_fixture_index = 0
+            if event.button == joystick_button_prev:
+                selected_fixture_index -= 1
+                if selected_fixture_index < 0:
+                    selected_fixture_index = len(lights.fixtures) - 1
 
     # Clock tick
     clock.tick(framerate)
