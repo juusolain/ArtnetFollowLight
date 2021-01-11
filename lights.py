@@ -6,7 +6,7 @@ fixtures = []
 paused = False
 
 current_target = {
-    'x': -4,
+    'x': 0,
     'y': 5,
     'z': 0
 }
@@ -27,7 +27,7 @@ async def main():
     while True:
         if not paused:
             set_positions()
-        await asyncio.sleep(1/30) # update position 30 times in a second
+        await asyncio.sleep(1/44) # update position 30 times in a second
 
 # Set target
 async def set_target(new_target):
