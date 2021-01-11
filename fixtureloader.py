@@ -42,7 +42,7 @@ async def load():
             # Create node, universe and fixture objects
             if not node_ip in nodes:
                 # Create new node if it doesn't exist
-                nodeobj = ArtNetNode(node_ip)
+                nodeobj = ArtNetNode(node_ip, max_fps=44, refresh_every=5)
                 await nodeobj.start()
                 nodes[node_ip] = {
                     'node': nodeobj,

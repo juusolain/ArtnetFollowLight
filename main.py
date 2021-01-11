@@ -102,6 +102,8 @@ def aa_circle(surf: pygame.surface, x: int, y: int, radius: int, color: (int, in
 # Update target from joystick
 def update_position() -> None:
     global joystick
+    if joystick is None:
+        return
     mult = joystick_speed / framerate
     x_value = joystick.get_axis(0)
     y_value = 0 - joystick.get_axis(1)

@@ -17,7 +17,7 @@ class Fixture:
     y = 0
     z = 0
     start_channel = 1
-    default_fade_time = 50 
+    default_fade_time = 0 
     prefer_tilt = False
     invert_pan = False
     invert_tilt = True
