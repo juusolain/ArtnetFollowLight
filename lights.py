@@ -1,15 +1,20 @@
 import fixtureloader
 import asyncio
 import listener
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 fixtures = []
 
-current_target = {
-    'x': 0,
-    'y': 4,
-    'z': 0
+default_target = {
+    'x': config['target'].getfloat('x'),
+    'y': config['target'].getfloat('y'),
+    'z': config['target'].getfloat('z')
 }
 
+current_target = default_target.copy()
 # Load fixtures
 async def load():
     global fixtures
@@ -20,6 +25,10 @@ def set_positions():
     # set target for each of the fixtures
     for f in fixtures:
         f.set_target(current_target)
+
+def reset_target():
+    global current_target
+    current_target = default_target.copy()
 
 async def main():
     await load() # Load fixtures

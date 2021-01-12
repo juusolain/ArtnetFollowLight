@@ -9,11 +9,17 @@ scale = 20
 
 show_pan_tilt = yes
 
+[target]
+x = 0
+y = 4
+z = 0
+
 [control]
 speed = 10
 deadzone = 0.01
 button_next = 4
 button_prev = 3
+button_reset = 1
 random_debug_input = no
 
 [listener]

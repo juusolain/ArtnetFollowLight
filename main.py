@@ -35,6 +35,7 @@ random_debug_input = config['control'].getboolean('random_debug_input')
 # Joystick buttons
 joystick_button_next = config['control'].getint('button_next')
 joystick_button_prev = config['control'].getint('button_prev')
+joystick_button_reset = config['control'].getint('button_reset')
 
 # Display scale & size
 scale = config['display'].getint('scale')
@@ -194,6 +195,8 @@ while running:
                 selected_fixture_index -= 1
                 if selected_fixture_index < 0:
                     selected_fixture_index = len(lights.fixtures) - 1
+            if event.button == joystick_button_reset:
+                lights.reset_target()
 
     # Clock tick
     clock.tick(framerate)
